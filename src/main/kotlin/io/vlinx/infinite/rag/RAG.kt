@@ -273,11 +273,13 @@ class RAG {
 
     private fun getModel(): ChatLanguageModel {
         val baseUrl = env.getProperty("search-settings.open-ai-base-url")
+        val modelName = env.getProperty("search-settings.open-ai-model-name")
         when (settings.aiModel) {
             AIModels.OPENAI -> {
                 return OpenAiChatModel.builder()
                     .apiKey(settings.openAiApiKey)
-                    .baseUrl(baseUrl)  // 添加 baseUrl 参数
+                    .baseUrl(baseUrl)      // 添加 baseUrl 参数
+                    .modelName(modelName)  // 添加 modelName 参数
                     .build()
             }
 
@@ -289,11 +291,13 @@ class RAG {
 
     private fun getStreamModel(): StreamingChatLanguageModel {
         val baseUrl = env.getProperty("search-settings.open-ai-base-url")
+        val modelName = env.getProperty("search-settings.open-ai-model-name")
         when (settings.aiModel) {
             AIModels.OPENAI -> {
                 return OpenAiStreamingChatModel.builder()
                     .apiKey(settings.openAiApiKey)
-                    .baseUrl(baseUrl)  // 添加 baseUrl 参数
+                    .baseUrl(baseUrl)      // 添加 baseUrl 参数
+                    .modelName(modelName)  // 添加 modelName 参数
                     .build()
             }
 
