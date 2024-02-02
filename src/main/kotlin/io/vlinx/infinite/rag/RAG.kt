@@ -37,6 +37,7 @@ import java.nio.charset.StandardCharsets
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.stream.Collectors.joining
+import org.springframework.core.env.Environment
 
 
 /**
@@ -53,6 +54,9 @@ class RAG {
     @Autowired
     lateinit var settings: Settings
 
+    @Autowired
+    lateinit var env: Environment 
+    
     private val logger = LoggerFactory.getLogger(RAG::class.java)
 
     private val ragText = """
@@ -268,9 +272,13 @@ class RAG {
     }
 
     private fun getModel(): ChatLanguageModel {
+        val baseUrl = env.getProperty("search-settings.open-ai-base-url")
         when (settings.aiModel) {
             AIModels.OPENAI -> {
-                return OpenAiChatModel.withApiKey(settings.openAiApiKey)
+                return OpenAiChatModel.builder()
+                    .apiKey(settings.openAiApiKey)
+                    .baseUrl(baseUrl)  // 添加 baseUrl 参数
+                    .build()
             }
 
             else -> {
@@ -280,9 +288,13 @@ class RAG {
     }
 
     private fun getStreamModel(): StreamingChatLanguageModel {
+        val baseUrl = env.getProperty("search-settings.open-ai-base-url")
         when (settings.aiModel) {
             AIModels.OPENAI -> {
-                return OpenAiStreamingChatModel.withApiKey(settings.openAiApiKey)
+                return OpenAiStreamingChatModel.builder()
+                    .apiKey(settings.openAiApiKey)
+                    .baseUrl(baseUrl)  // 添加 baseUrl 参数
+                    .build()
             }
 
             else -> {
